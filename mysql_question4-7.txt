@@ -1,0 +1,50 @@
+# Question 4
+# Give the name and length of the smallest gene in the genome.
+
+query = select gene_name, (seq_region_end - seq_region_start +1) as length from gene order by length limit 1;
+
+name = TRDD1
+length = 8
+
+# Question 5
+# Give the name of the gene with the most transcripts.
+# Give to number of transcripts of this gene.
+
+
+query = select gene_name, count(transcript.gene_id) as count from gene, transcript where gene.gene_id = transcript.gene_id group by gene_name order by count desc limit 1;
+name = U6
+number of transcripts = 1329
+
+# Question 6
+# Give the name of the chromosome with the second most genes that tell something about cancer.
+# What is the number of exons of this chromosome?
+# Two queries
+
+query 1 = select chromosome, count(*) as total_genes from gene where description = "cancer" group by chromosome order by total_genes desc limit 1 offset 1;
+
+chromosome = 2
+total number of genes = 3852
+
+query 2 =
+
+
+# Question 7
+# Give the number of rows from the exon table and do the same for the exon_transcript table.
+# Explain why there is a difference in the number of rows.
+
+# see if all exon_ids are only present once:
+
+query = select exon_id, count(*) as number from exon group by exon_id order by number desc limit 10;
+
+# this is the case
+
+query = selection exon_id from exon;
+number of rows = 642 590
+
+# repeat for exon_transcript table
+query = select exon_id, count(*) from exon group by exon_id order by exon_id desc limit 10;
+
+# this is also the case
+
+query = select exon_id from transcript_exon;
+number of rows = 1 178 393
