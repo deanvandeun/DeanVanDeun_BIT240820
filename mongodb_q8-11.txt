@@ -1,0 +1,31 @@
+# Question 8
+# Give the number of medicines taken with a dental gel (GEL;DENTAL).
+# Make sure that your query only shows the name of the drug.
+
+query = db.bioinf_mongo_examen.find({method_of_admission: "GEL;DENTAL"}, {_id: 0, drug: 1})
+
+number of medicines = 1
+
+# Question 9
+# Give the number of medicines that have side effects in more than 12% of cases.
+
+query = db.bioinf_mongo_examen.find({percentage_of_side_effects: { $gt:12 }}).count()
+
+number of medicines = 12
+
+# Question 10
+# Give the names of the companies that produce medicines that on average
+# cause side effects in more than 10% of cases?
+# Sort your results according to decreasing percentage of side effects.
+
+query = db.bioinf_mongo_examen.aggregate( [ { $group: {_id: "$company", average: {$avg: "$percentage_of_side_effects"}}}, {$match: { average: {$gt: 10}}}, {$sort: {average: -1}} ] )
+
+names = Galderma Laboratories, Watson Pharmaceuticals, Durata Therapeutics
+
+
+# Question 11
+# Specify the lower and upper limits of the percentage of side effects
+# of medicines within companies that produce more than 1 drug.
+
+
+query = db.bioinf_mongo_examen.aggregate([ { $group: { _id: "$company", number: {$count: "$percentage_of_side_effects"} }}, { $match: {number {$gt: 1}} ])
